@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="00d7f2dd-4650-49d7-8b1c-bef4f4ece128" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/api/lyh/alipay.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/lyh/card_template.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/lyh/category.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/lyh/finance.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/lyh/order_manage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/lyh/product.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/lyh/salary.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/lyh/system_menu.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/lyh/user.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/card_used.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/discount_card.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/head.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/invalid_card.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/no_coupon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/refunded.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/service_log.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/stored_card.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/times_card.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/date-format.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/request_alipay.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/request_lj.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/request_vin.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lyh/admin/missed_time.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lyh/admin/setting.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lyh/finance/cardAmount.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lyh/finance/components/order_detail.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lyh/finance/index.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lyh/menu/element-icons.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lyh/menu/index.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lyh/menu/svg-icons.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lyh/salary/index.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lyh/salary/target_salary.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lzq/item_card/member_card.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lzq/item_card/project.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lzq/vip/components/consume_log.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lzq/vip/components/order_detail.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/views/lzq/vip/person_detail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env.development" beforeDir="false" afterPath="$PROJECT_DIR$/.env.development" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env.production" beforeDir="false" afterPath="$PROJECT_DIR$/.env.production" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/客满满（仿）.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/lyh/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/lyh/admin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/lyh/merchant.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/lyh/merchant.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/lyh/system_role.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/lyh/system_role.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/lyh/user_group.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/lyh/user_group.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/qc/zh_ai.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/qc/zh_ai.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/components/Sidebar/Item.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/components/Sidebar/Item.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/components/Sidebar/Link.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/components/Sidebar/Link.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/components/Sidebar/Logo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/components/Sidebar/Logo.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/components/Sidebar/SidebarItem.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/components/Sidebar/SidebarItem.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/components/Sidebar/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/components/Sidebar/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/permission.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/permission.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/modules/zh-ai.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/modules/zh-ai.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/settings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/modules/permission.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/permission.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/get-page-title.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/get-page-title.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/requestTwo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/requestTwo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/request_ai.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/request_ai.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/login/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/login/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/lyh/admin/attendance.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/lyh/admin/attendance.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/lyh/admin/group.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/lyh/admin/group.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/lyh/admin/info.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/lyh/admin/info.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/lyh/admin/power.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/lyh/admin/power.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/lyh/shop/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/lyh/shop/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/lzq/vip_card/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/lzq/vip/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/lzq/vip_card/person_detail.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/zhMerchant/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/zhMerchant/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue.config.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Single File Component" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="27STJPsqjntVXNGEiln2FoQ7YIM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../温有商户端" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="ts.external.directory.path" value="D:\Program Files\JetBrains\WebStorm 2021.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="00d7f2dd-4650-49d7-8b1c-bef4f4ece128" name="Default Changelist" comment="" />
+      <created>1649312414937</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1649312414937</updated>
+      <workItem from="1649312416678" duration="3465000" />
+      <workItem from="1649382345479" duration="60913000" />
+      <workItem from="1649926226675" duration="15355000" />
+      <workItem from="1650269017439" duration="5147000" />
+      <workItem from="1650767932034" duration="1364000" />
+      <workItem from="1651119705400" duration="8071000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
