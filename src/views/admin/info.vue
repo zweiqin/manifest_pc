@@ -495,7 +495,7 @@ export default {
       .then(res => {
         if (res.status === 200) {
           this.select_state_list = JSON.parse(JSON.stringify(res.data))
-          res.data.splice(0,1,{id:'',name:'全部'})
+          res.data.splice(0,0,{id:'',name:'全部'})
           this.state_list = res.data
         }
       }).catch(err => {
