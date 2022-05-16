@@ -22,18 +22,18 @@ export default {
     },
    watch: {
     $route(to ,from){
-      if(to.path == '/login'){
-        this.myPath = 'login'
-        if(this.is_connect == 1){
-          this.websock.close()
-          this.is_connect = 0
-        }
-      }else{
-        if(this.is_connect == 0){
-          // this.initWebSocket();
-          this.is_connect = 1
-        }
-      }
+      // if(to.path == '/login'){
+      //   this.myPath = 'login'
+      //   if(this.is_connect == 1){
+      //     this.websock.close()
+      //     this.is_connect = 0
+      //   }
+      // }else{
+      //   if(this.is_connect == 0){
+      //     // this.initWebSocket();
+      //     this.is_connect = 1
+      //   }
+      // }
     }
    },
     methods: {

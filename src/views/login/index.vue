@@ -149,8 +149,7 @@ export default {
             localstorage.set('admin_menu_list',res.data.pc_menu_list)
             this.loading = false
             this.$message.success("登录成功")
-            // this.$router.push({ path: '/item_card/project' })
-
+            //跳转到动态路由表的第一个路由
             if(res.data.pc_menu_list[0].children){
               this.$router.push({ path: res.data.pc_menu_list[0].children[0].route })
             }else{
