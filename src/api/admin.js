@@ -50,7 +50,7 @@ export function download_admin_work(data) {
  */
 //查询员工状态列表/demo
 export function get_state(data) {
-  return request_cong.get('/api/v1/admin/state/')
+  return request_cong.get('/api/v1/admin/state/',data)
 }
 
 //新增/修改状态/demo
