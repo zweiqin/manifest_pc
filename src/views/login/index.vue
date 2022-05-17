@@ -86,7 +86,7 @@ export default {
       loginForm: {
         account: '',
         pwd: '',
-        admin_type: 0
+        admin_type: 2
       },
       loginRules: {
         account: [{ required: true, trigger: 'blur', validator: validateUsername }],

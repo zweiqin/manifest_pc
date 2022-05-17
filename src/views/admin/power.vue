@@ -154,6 +154,7 @@
 <script>
 import { role_search, role_operate, role_del } from '@/api/system_role'
 import {menu_max_search_type, menu_search_type} from '@/api/system_menu'
+import localstorage from '@/utils/localStorage'
 
 export default {
   data() {
@@ -166,7 +167,7 @@ export default {
       pc_menus: [],
       //先择好的移动端节点
       mobile_menus: [],
-      range: '0',
+      range: '2',
       //总后台PC,移动端所有菜单
       admin_menu_list:[],
       //店铺后台PC,移动端所有菜单
@@ -182,8 +183,8 @@ export default {
         role_name: '',
         rules: '',
         rules_mobile: '',
-        role_type: 0,
-        mer_id:0,
+        role_type: 2,
+        mer_id:localstorage.get('admin_info').mer_id,
         provider_id:0
       },
       addRules: {
@@ -210,7 +211,7 @@ export default {
         role_name: '',
         rules: '',
         rules_mobile: '',
-        role_type: 0
+        role_type: 2
       },
       editRules: {
         role_name: [{ required: true, message: '角色名称不能为空', change: 'blue' }]
@@ -261,7 +262,7 @@ export default {
       this.add_phone_data = this.admin_menu_list.AppMenu
       this.pc_check = []
       this.mobile_check = []
-      this.range = 0
+      this.range = 2
       this.$nextTick(function () {
         this.$refs['addForm'].resetFields()
       })
@@ -277,7 +278,7 @@ export default {
     },
     //获取后台的菜单
     async get_menu_list(){
-      await menu_max_search_type(0)
+      await menu_max_search_type(2)
         .then(res => {
           this.admin_menu_list = res.data
           this.add_pc_data = this.admin_menu_list.pcMenu
@@ -289,7 +290,7 @@ export default {
     },
     //获取所有权限
     get_role_list(){
-      role_search({role_type:0,mer_id:0,provider_id:0,is_developers:0})
+      role_search({role_type:2,mer_id:localstorage.get('admin_info').mer_id,provider_id:0,is_developers:0})
         .then(res => {
           res.data.map(item => {
             return item.card_name = item.role_type == 0 ? '总部' : item.role_type == 1 ? '服务商' : '商户端'

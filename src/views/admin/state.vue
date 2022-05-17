@@ -65,8 +65,8 @@ export default {
       //注：总后台：admin_type:0,mer_id:0    商户端：admin_type:2,mer_id:localstorage.get('admin_info').mer_id
       form: {
         name: '',
-        admin_type: 0,
-        mer_id: 0
+        admin_type: 2,
+        mer_id: localstorage.get('admin_info').mer_id
       },
       formRules: {
         name: [
@@ -83,7 +83,7 @@ export default {
 		//员工状态列表
     get_list() {
       //注：总后台：admin_type:0,mer_id:0    商户端：admin_type:2,mer_id:localstorage.get('admin_info').mer_id
-      get_state({amdin_type:0,mer_id:0})
+      get_state({amdin_type:2,mer_id:localstorage.get('admin_info').mer_id})
       .then(res => {
         if (res.status === 200) {
           this.tableData.data = res.data

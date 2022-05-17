@@ -166,7 +166,7 @@ export default {
       pc_menus: [],
       //先择好的移动端节点
       mobile_menus: [],
-      range: '0',
+      range: '2',
       //总后台PC,移动端所有菜单
       admin_menu_list:[],
       //店铺后台PC,移动端所有菜单
@@ -182,8 +182,8 @@ export default {
         role_name: '',
         rules: '',
         rules_mobile: '',
-        role_type: 0,
-        mer_id:0,
+        role_type: 2,
+        mer_id:localstorage.get('admin_info').mer_id,
         provider_id:0
       },
       addRules: {
@@ -210,7 +210,7 @@ export default {
         role_name: '',
         rules: '',
         rules_mobile: '',
-        role_type: 0
+        role_type: 2
       },
       editRules: {
         role_name: [{ required: true, message: '角色名称不能为空', change: 'blue' }]
@@ -305,7 +305,7 @@ export default {
     },
     //获取所有权限
     get_role_list(){
-      role_search({role_type:'',mer_id:'',provider_id:'',is_developers:1})
+      role_search({role_type:2,mer_id:localstorage.get('admin_info').mer_id,provider_id:'',is_developers:1})
         .then(res => {
           res.data.map(item => {
             return item.card_name = item.role_type == 0 ? '总部' : item.role_type == 1 ? '服务商' : '商户端'
