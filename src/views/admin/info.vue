@@ -81,7 +81,7 @@
           </template>
         </el-table-column>
         
-        <el-table-column prop="state_name" label="员工状态" min-width="100" />
+        <!-- <el-table-column prop="state_name" label="员工状态" min-width="100" /> -->
 
         <el-table-column label="操作" min-width="120" fixed="right" align="center">
           <template slot-scope="scope">
