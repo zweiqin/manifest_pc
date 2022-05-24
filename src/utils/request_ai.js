@@ -47,7 +47,7 @@ function baseRequest(options) {
       //403则重回首页，采用节流的写法
       if(done) {
         done = false
-        MessageBox.alert('登录信息超时,请重新登录！','登录超时',{
+        MessageBox.alert('非法操作,请重新登录！','操作异常',{
           confirmButtonText:'确定',
           callback: action => {
             //跳转登录页   callback点击确定按钮后的回调函数

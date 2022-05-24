@@ -408,7 +408,7 @@ export default {
     this.get_admin_role();
     // this.get_mer_role();
     // this.get_mer_list();
-    this.get_state_list()
+    // this.get_state_list()
   },
   methods: {
     //修改员工状态
