@@ -29,6 +29,9 @@ import {Base64} from 'js-base64'
 import './styles/iconfont.css'
 Vue.use(Base64);
 
+import DeepClone from './utils/deepClone/index'
+Vue.use(DeepClone)
+
 // 引入表格
 // import 'xe-utils'
 // import VXETable from 'vxe-table'

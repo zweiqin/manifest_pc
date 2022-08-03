@@ -80,7 +80,7 @@
             {{get_role_name(scope.row)}}
           </template>
         </el-table-column>
-        
+
         <!-- <el-table-column prop="state_name" label="员工状态" min-width="100" /> -->
 
         <el-table-column label="操作" min-width="120" fixed="right" align="center">
@@ -282,7 +282,7 @@
     </el-dialog>
     <!-- e编辑员工状态 -->
 
-    
+
   </div>
 </template>
 
@@ -488,7 +488,7 @@ export default {
     //   if(e.state_id != 0) {
     //     this.stateForm.state_id = e.state_id
     //   }
-      
+
     // },
     //员工状态列表
     get_state_list() {
@@ -523,7 +523,7 @@ export default {
         })
         return name.join(",")
       }
-      
+
     },
     //打开新增页面
     add_click(){
@@ -572,12 +572,12 @@ export default {
     },
     my_select(row,index,data){
       let new_data;
-      new_data = JSON.parse(JSON.stringify(this.[data]))
+      new_data = JSON.parse(JSON.stringify(this[data]))
       new_data.splice(index,1)
       if(new_data.length > 0){
         if(new_data.filter(item => item.role_id == row.role_id).length > 0){
           this.$message.error('该角色已选，请不要重复选取。')
-          this.[data][index].role_id = ''
+          this[data][index].role_id = ''
         }
       }
     },
@@ -742,7 +742,7 @@ export default {
     },
     // 角色-删除
     mer_del_role(index,data) {
-      this.[data].splice(index,1)
+      this[data].splice(index,1)
     },
     // 保存修改
     add_submit(formName) {
@@ -814,7 +814,7 @@ export default {
     },
     // 总角色-删除
     all_del_role(index,data) {
-      this.[data].splice(index,1)
+      this[data].splice(index,1)
     },
     // 角色-添加
     edit_role() {
