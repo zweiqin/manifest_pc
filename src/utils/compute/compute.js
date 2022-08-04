@@ -94,19 +94,19 @@ function Compute(value) {
 Object.assign(Compute.prototype, {
   add(v) {
     this.value = add(this.value, v);
-    return this;
+    return this.value
   },
   sub(v) {
     this.value = sub(this.value, v);
-    return this;
+    return this.value
   },
   div(v) {
     this.value = div(this.value, v);
-    return this;
+    return this.value
   },
   mul(v) {
     this.value = mul(this.value, v);
-    return this;
+    return this.value
   }
 });
 

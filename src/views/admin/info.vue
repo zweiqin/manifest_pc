@@ -287,12 +287,9 @@
 </template>
 
 <script>
-// import { supplie_search, supplie_status_up, supplie_transport_up, supplie_donate_up } from '@/api/charity/application/material'
-// var reg_phone = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
-import { admin_search,pwd_update,admin_del,admin_create,admin_details,get_state,set_state } from '@/api/admin'
+import { admin_create, admin_del, admin_details, admin_search, pwd_update } from '@/api/admin'
 import { role_search } from '@/api/system_role'
-import  localstorage  from '@/utils/localStorage'
-// import { mer_search } from '@/api/merchant'
+import localstorage from '@/utils/localStorage'
 
 export default {
   name: 'Info',
@@ -404,106 +401,9 @@ export default {
   },
   mounted() {
     this.get_list('');
-    // this.get_group();
     this.get_admin_role();
-    // this.get_mer_role();
-    // this.get_mer_list();
-    // this.get_state_list()
   },
   methods: {
-    //修改员工状态
-    // change_state(formName) {
-    //   this.$refs[formName].validate(async valid => {
-    //     // 若必填项不为空
-    //     if (valid) {
-    //       let flag = 0;
-    //       let add_data = {};
-    //       let data = JSON.parse(JSON.stringify(this.allEditWorkInfo));
-    //       this.allEditWorkInfo.forEach(item => {
-    //         if(item.role_id == ''){
-    //           this.$message.error('请选择总后台角色！')
-    //           flag = 1
-    //           return false;
-    //         }else{
-    //           this.addWorkInfo.forEach(item => {
-    //             if(item.role_id == ''){
-    //               this.$message.error('请选择门店角色！')
-    //               flag = 1
-    //               return false;
-    //             }
-    //             if(item.mer_list.length == 0){
-    //               this.$message.error('店铺角色必须指定服务范围。')
-    //               flag = 1
-    //               return false;
-    //             }
-    //           })
-    //         }
-    //       })
-    //       if(flag == 0){
-    //         data.push.apply(data,this.addWorkInfo)
-    //         if(data.length == 0){
-    //           this.$message.error('请创建角色。')
-    //         }else{
-    //           add_data.admin_id = this.stateForm.admin_id
-    //           add_data.state_id = this.stateForm.state_id
-    //           let data2 = JSON.parse(JSON.stringify(data))
-    //           add_data.admin_roles_list = data2.map(item => {
-    //             return item.role_id
-    //           })
-
-    //           set_state(add_data)
-    //             .then(res => {
-    //               this.$message.success('修改员工状态成功！')
-    //               this.state_visible = false
-    //               this.stateForm = {
-    //                 admin_id: '',
-    //                 state_id: '',
-    //                 admin_roles_list: []
-    //               }
-    //               this.get_list()
-    //             })
-    //             .catch(err => {
-    //               this.$message.error(err.data.data)
-    //             })
-    //         }
-
-    //       }
-    //     } else {
-    //       return false
-    //     }
-    //   })
-    // },
-    //打开编辑员工状态对话框
-    // edit_state(e) {
-    //   this.state_visible = true
-    //   this.stateForm.admin_id = e.admin_id
-    //   if(e.admin_roles_list.length != 0) {
-    //     let data = {},all = []
-    //     e.admin_roles_list.forEach(item => {
-    //       data.role_id = item.role_id
-    //       all.push(JSON.parse(JSON.stringify(data)))
-    //     })
-    //     this.allEditWorkInfo = all
-    //   }
-    //   if(e.state_id != 0) {
-    //     this.stateForm.state_id = e.state_id
-    //   }
-
-    // },
-    //员工状态列表
-    get_state_list() {
-      //注：总后台：admin_type:0,mer_id:0    商户端：admin_type:2,mer_id:localstorage.get('admin_info').mer_id
-      get_state({admin_type:2,mer_id:localstorage.get('admin_info').mer_id})
-      .then(res => {
-        if (res.status === 200) {
-          this.select_state_list = JSON.parse(JSON.stringify(res.data))
-          res.data.splice(0,0,{id:'',name:'全部'})
-          this.state_list = res.data
-        }
-      }).catch(err => {
-        this.$message.error(err.data.data)
-      })
-    },
     is_max(row){
       if(row.admin_roles_list) {
         let roles = row.admin_roles_list
@@ -598,7 +498,7 @@ export default {
           this.admin_role_list = res.data
         })
         .catch(err => {
-          this.$message.error(res.data.data)
+          this.$message.error(err.data.data)
         })
     },
     //取商户后台角色
@@ -608,19 +508,9 @@ export default {
           this.mer_role_list = res.data
         })
         .catch(err => {
-          this.$message.error(res.data.data)
+          this.$message.error(err.data.data)
         })
     },
-    // //取所有分组信息
-    // async get_group(){
-    //   await group_search(this.groupForm)
-    //           .then(res =>{
-    //             this.group_list = res.data
-    //           })
-    //           .catch(err =>{
-    //             this.$message.error(err.data.data)
-    //           })
-    //   },
 
     //查询
     info_search() {
@@ -727,15 +617,12 @@ export default {
       this.is_del = 0;
       this.get_list('')
     },
+
     // s新增员工
     // 总角色-添加
     all_add_role() {
       this.allAddWorkInfo.push(JSON.parse(JSON.stringify(this.new_role)))
     },
-    // // 总角色-删除
-    // all_del_role(e) {
-    //   console.log(e)
-    // },
     // 角色-添加
     add_role() {
       this.addWorkInfo.push(JSON.parse(JSON.stringify(this.new_role)))
@@ -930,12 +817,6 @@ export default {
 </script>
 
 <style lang="scss">
-::deep [type=reset],
-[type=submit],
-button,
-html [type=button] {
-    -webkit-appearance: none !important;
-}
 .info{
   .box-card {
     margin: 20px 20px
