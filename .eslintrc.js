@@ -199,7 +199,7 @@ module.exports = {
     'no-inline-comments': 0, // 禁止行内备注
     'no-inner-declarations': [2, 'functions'], // 禁止在块语句中使用声明（变量或函数）
     'no-invalid-regexp': 2, // 禁止无效的正则表达式
-    'no-invalid-this': 2, // 禁止无效的this，只能用在构造器，类，对象字面量
+    'no-invalid-this': 0, // 禁止无效的this，只能用在构造器，类，对象字面量
     'no-irregular-whitespace': 2, // 不能有不规则的空格
     'no-iterator': 2, // 禁止使用__iterator__ 属性
     'no-label-var': 2, // label名不能与var声明的变量名相同
@@ -260,7 +260,7 @@ module.exports = {
     'no-this-before-super': 2, // 在调用super()之前不能使用this或super
     'no-throw-literal': 2, // 禁止抛出字面量错误 throw "error";
     'no-trailing-spaces': 2, // 一行结束后面不要有空格
-    'no-undef': 2, // 不能有未定义的变量
+    'no-undef': 0, // 不能有未定义的变量
     'no-undef-init': 2, // 变量初始化时不能直接给它赋值为undefined
     'no-undefined': 0, // 不能使用undefined
     'no-unexpected-multiline': 2, // 避免多行表达式
