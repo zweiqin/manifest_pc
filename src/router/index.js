@@ -1,15 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-Vue.use(Router)
-
 /* Layout */
 import Layout from '@/layout'
 
 /* Router Modules */
 import zhAi from './modules/zh-ai'
 import admin from './modules/admin'
-import menu from './modules/menu'
+
+Vue.use(Router)
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -62,7 +60,6 @@ export const constantRoutes = [
   },
   zhAi,
   admin,
-  menu,
   {
     path: '/404',
     component: () => import('@/views/error-page/404'),
@@ -81,7 +78,6 @@ export const constantRoutes = [
  */
 // 临时的，不一定有↓ ，有admin则加上去
 export const asyncRoutes = [
-
   /** when your routing map is too long, you can split it into small modules **/
 
   {
@@ -140,11 +136,12 @@ export const asyncRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () => new Router({
-  mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 

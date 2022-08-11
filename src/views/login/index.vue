@@ -54,34 +54,31 @@
 </template>
 
 <script>
-import { admin_login } from '@/api/admin'
-// import { validUsername } from '@/utils/validate'
-import SocialSign from './components/SocialSignin'
+import { Login } from '@/api/admin'
 import localstorage from '@/utils/localStorage'
-import { setToken,getToken } from '@/utils/auth'
-import Cookies from 'js-cookie'
+import { setToken } from '@/utils/auth'
+
 export default {
-  name: 'Login',
-  components: { SocialSign },
+  name: 'login',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("请输入用户名"));
+        callback(new Error('请输入用户名'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePassword = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("请输入密码"));
+        callback(new Error('请输入密码'))
       } else {
         if (value.length < 6) {
-          callback(new Error("请输入不少于6位数的密码"));
+          callback(new Error('请输入不少于6位数的密码'))
         } else {
-          callback();
+          callback()
         }
       }
-    };
+    }
     return {
       loginForm: {
         account: '',
@@ -101,7 +98,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         const query = route.query
         if (query) {
           this.redirect = query.redirect
@@ -111,18 +108,12 @@ export default {
       immediate: true
     }
   },
-  created() {
-    // window.addEventListener('storage', this.afterQRScan)
-  },
   mounted() {
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
-  },
-  destroyed() {
-    // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
     checkCapslock(e) {
@@ -143,20 +134,26 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          admin_login(this.loginForm).then(res => {
+          Login(this.loginForm).then(res => {
+            const { user_info } = res.data
             setToken(res.data.token)
-            localstorage.set('admin_info',res.data.user_info)
-            localstorage.set('admin_menu_list',res.data.pc_menu_list)
+            localstorage.set('admin_info', user_info)
+
+            const pc_menu_list = this.$deepClone(res.data.pc_menu_list)
+            this.delChildren(pc_menu_list)
+            localstorage.set('admin_menu_list', pc_menu_list)
+
             this.loading = false
-            this.$message.success("登录成功")
-            //跳转到动态路由表的第一个路由
-            if(res.data.pc_menu_list[0].children){
-              this.$router.push({ path: res.data.pc_menu_list[0].children[0].route })
-            }else{
-              this.$router.push({ path: res.data.pc_menu_list[0].route })
+            this.$message.success('登录成功')
+
+            // 跳转到动态路由表的第一个路由
+            if (pc_menu_list[0].children) {
+              this.$router.push({ path: pc_menu_list[0].children[0].route })
+            } else {
+              this.$router.push({ path: pc_menu_list[0].route })
             }
           }).catch(err => {
-            this.$message.error(err.data.data)
+            this.$message.error(err.data.msg)
             this.loading = false
           })
         } else {
@@ -164,6 +161,18 @@ export default {
         }
       })
     },
+
+    // 递归删除路由列表中的无效children值（null）
+    delChildren(array) {
+      array.forEach((item) => {
+        if (Object.prototype.hasOwnProperty.call(item, 'children') && item.children === null) {
+          delete item.children
+        } else {
+          this.delChildren(item.children)
+        }
+      })
+    },
+
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
         if (cur !== 'redirect') {
@@ -172,24 +181,6 @@ export default {
         return acc
       }, {})
     }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
   }
 }
 </script>
@@ -202,7 +193,7 @@ $bg:#283443;
 $light_gray:#fff;
 $cursor: #fff;
 
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+@supports (-webkit-mask: none) {
   .login-container .el-input input {
     color: $cursor;
   }
@@ -217,16 +208,16 @@ $cursor: #fff;
 
     input {
       background: transparent;
-      border: 0px;
+      border: 0;
       -webkit-appearance: none;
-      border-radius: 0px;
+      border-radius: 0;
       padding: 12px 5px 12px 15px;
       color: $light_gray;
       height: 47px;
       caret-color: $cursor;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
+        box-shadow: 0 0 0 1000px $bg inset !important;
         -webkit-text-fill-color: $cursor !important;
       }
     }
@@ -287,7 +278,7 @@ $light_gray:#eee;
     .title {
       font-size: 26px;
       color: $light_gray;
-      margin: 0px auto 40px auto;
+      margin: 0 auto 40px auto;
       text-align: center;
       font-weight: bold;
     }

@@ -1,23 +1,22 @@
-import request_cong from '@/utils/request_ai.js'
+import request from '@/utils/request.js'
 
-/* 
-**
-**权限管理相关接口
-**
+/*
+ **
+ **员工权限管理相关接口
+ **
  */
 
-//用户查询/demo
-export function role_search(data) {
-  return request_cong.get('/api/v1/admin/userRole/search/', data)
+// 角色列表查询/demo
+export function GetRoleList(data) {
+  return request.get('/v1/role/GetRoleList', data)
 }
 
-//后台用户角色新增/修改/demo
-export function role_operate(data) {
-  return request_cong.post('/api/v1/admin/userRole/operate/', data)
+// 后台用户角色新增/修改/删除demo
+export function OperateRole(data) {
+  return request.post('/v1/role/OperateRole', data)
 }
 
-//后台用户角色新增/修改/demo
-export function role_del(data) {
-  return request_cong.get('/api/v1/admin/userRole/operate/'+ data)
+// 角色列表查询路由除根元素/demo
+export function GetRoleListNoRoot(data) {
+  return request.get('/v1/role/GetRoleListNoRoot', data)
 }
-
