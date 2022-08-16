@@ -6,6 +6,7 @@ import Layout from '@/layout'
 /* Router Modules */
 import zhAi from './modules/zh-ai'
 import admin from './modules/admin'
+import test from './modules/test'
 
 Vue.use(Router)
 
@@ -60,6 +61,7 @@ export const constantRoutes = [
   },
   zhAi,
   admin,
+  test, // 测试页面（上线即注释掉）
   {
     path: '/404',
     component: () => import('@/views/error-page/404'),
