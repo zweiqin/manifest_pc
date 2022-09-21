@@ -143,6 +143,9 @@ export default {
             this.delChildren(pc_menu_list)
             localstorage.set('admin_menu_list', pc_menu_list)
 
+            const admin_roles_list = this.$deepClone(res.data.admin_roles_list)
+            localstorage.set('admin_roles_list', admin_roles_list)
+
             this.loading = false
             this.$message.success('登录成功')
 
