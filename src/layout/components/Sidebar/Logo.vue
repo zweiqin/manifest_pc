@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'SidebarLogo',
+  name: 'sidebar-logo',
   props: {
     collapse: {
       type: Boolean,
@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: 'demo——商户后台',
+      title: '货单管理系统——商户后台',
       logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
     }
   }

@@ -24,6 +24,12 @@ const admin = {
       component: () => import('@/views/admin/info'),
       name: '员工信息',
       meta: { title: '员工信息' }
+    },
+    {
+      path: '/admin/team',
+      component: () => import('@/views/admin/team'),
+      name: '团队管理',
+      meta: { title: '团队管理' }
     }
   ]
 }

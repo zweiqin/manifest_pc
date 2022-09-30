@@ -1,7 +1,6 @@
 module.exports = {
-
   // 路由标题
-  title: 'demo——商户后台',
+  title: '货单管理系统——商户后台',
 
   /**
    * @type {boolean} true | false
