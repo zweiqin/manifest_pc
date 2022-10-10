@@ -18,12 +18,6 @@ const shop = {
       component: () => import('@/views/shop/listed'),
       name: '上架管理',
       meta: { title: '上架管理' }
-    },
-    {
-      path: '/shop/supplier',
-      component: () => import('@/views/shop/supplier'),
-      name: '供应商管理',
-      meta: { title: '供应商管理' }
     }
   ]
 }

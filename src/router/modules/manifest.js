@@ -26,6 +26,12 @@ const manifest = {
       meta: { title: '货单生成' }
     },
     {
+      path: '/manifest/approval',
+      component: () => import('@/views/manifest/approval'),
+      name: '货单审批',
+      meta: { title: '货单审批' }
+    },
+    {
       path: '/manifest/order',
       component: () => import('@/views/manifest/order'),
       name: '订单管理',

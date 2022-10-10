@@ -16,48 +16,50 @@
       <!-- e头部日期选择     -->
 
       <!--s货单表格部分 以商品为单位 不同订单同商品不合并   -->
-      <el-table
-        :data="manifest_list"
-        :summary-method="getSummaries"
-        border
-        class="el-table"
-        show-summary
-        style="width: 100%;margin-top: 20px"
-      >
-        <el-table-column label="序号" min-width="80" prop="id"></el-table-column>
-        <el-table-column label="供应商" min-width="180" prop="supplier_name"></el-table-column>
-        <el-table-column label="货物名称" min-width="180" prop="good_name"></el-table-column>
-        <el-table-column label="订单数量" min-width="100" prop="order_num"></el-table-column>
-        <el-table-column label="仓库数量" min-width="120" prop="warehouse_num">
-          <template v-slot="scope">
-            <el-input
-              v-model="scope.row.warehouse_num"
-              style="width: 100px"
-              @change="changeWarehouseNum(scope.row)"
-            ></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column label="采购数量" min-width="100" prop="purchase_num"></el-table-column>
-        <el-table-column label="采购价" min-width="100" prop="purchase_price"></el-table-column>
-        <el-table-column label="采购总价" min-width="180" prop="total_price"></el-table-column>
-        <el-table-column label="货单id" min-width="180" prop="manifest_id"></el-table-column>
-        <el-table-column label="创建时间" min-width="180" prop="create_time"></el-table-column>
-        <el-table-column label="货物状态" min-width="180" prop="status">
-          <template v-slot="scope">
-            <el-tag v-if="scope.row.status === 1" type="success">已提交</el-tag>
-            <el-tag v-else type="danger">未提交</el-tag>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div v-for="(item,index) in manifest_list" :key="index" class="table">
+        <el-table
+          :data="item"
+          :summary-method="getSummaries"
+          border
+          class="el-table"
+          show-summary
+          style="width: 100%;margin-top: 20px"
+        >
+          <el-table-column label="序号" min-width="80" prop="id"></el-table-column>
+          <el-table-column label="供应商" min-width="180" prop="supplier_name"></el-table-column>
+          <el-table-column label="货物名称" min-width="180" prop="good_name"></el-table-column>
+          <el-table-column label="订单数量" min-width="100" prop="order_num"></el-table-column>
+          <el-table-column label="仓库数量" min-width="120" prop="warehouse_num">
+            <template v-slot="scope">
+              <el-input
+                v-model="scope.row.warehouse_num"
+                style="width: 100px"
+                @change="changeWarehouseNum(scope.row,index)"
+              ></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="采购数量" min-width="100" prop="purchase_num"></el-table-column>
+          <el-table-column label="采购价" min-width="100" prop="purchase_price"></el-table-column>
+          <el-table-column label="采购总价" min-width="180" prop="total_price"></el-table-column>
+          <el-table-column label="货单id" min-width="180" prop="manifest_id"></el-table-column>
+          <el-table-column label="创建时间" min-width="180" prop="create_time"></el-table-column>
+          <el-table-column label="货物状态" min-width="180" prop="status">
+            <template v-slot="scope">
+              <el-tag v-if="scope.row.status === 1" type="success">已提交</el-tag>
+              <el-tag v-else type="danger">未提交</el-tag>
+            </template>
+          </el-table-column>
+        </el-table>
 
-      <!--      // TODO (leo) 2022/9/30 10:37: 生成货单按钮权限控制，仅在货单未提交时可以保存与提交-->
-      <div class="foot-btn">
-        <el-button class="foot-btn-item" type="primary" @click="saveManifest()">保存货单</el-button>
-        <el-button class="foot-btn-item" type="primary" @click="submitManifest()">提交审批</el-button>
+        <!--      // TODO (leo) 2022/9/30 10:37: 生成货单按钮权限控制，仅在货单未提交时可以保存与提交-->
+        <div class="foot-btn">
+          <el-button class="foot-btn-item" type="primary" @click="submitManifest(index)">提交审批</el-button>
+        </div>
       </div>
 
     </el-card>
   </div>
+
 </template>
 
 <script>
@@ -67,58 +69,114 @@ export default {
     return {
       date: '',
       manifest_list: [
-        {
-          id: 1,
-          supplier_name: '供应商1',
-          good_name: '商品1',
-          order_num: 100,
-          warehouse_num: 100,
-          purchase_num: 100,
-          purchase_price: 100,
-          total_price: 10000,
-          manifest_id: 1,
-          create_time: '2020-01-01',
-          status: 1
-        },
-        {
-          id: 2,
-          supplier_name: '供应商1',
-          good_name: '商品2',
-          order_num: 100,
-          warehouse_num: 100,
-          purchase_num: 100,
-          purchase_price: 100,
-          total_price: 10000,
-          manifest_id: 1,
-          create_time: '2020-01-01',
-          status: 1
-        },
-        {
-          id: 3,
-          supplier_name: '供应商2',
-          good_name: '商品1',
-          order_num: 100,
-          warehouse_num: 100,
-          purchase_num: 100,
-          purchase_price: 100,
-          total_price: 10000,
-          manifest_id: 1,
-          create_time: '2020-01-01',
-          status: 1
-        },
-        {
-          id: 4,
-          supplier_name: '供应商2',
-          good_name: '商品2',
-          order_num: 100,
-          warehouse_num: 100,
-          purchase_num: 100,
-          purchase_price: 100,
-          total_price: 10000,
-          manifest_id: 1,
-          create_time: '2020-01-01',
-          status: 1
-        }
+        [
+          {
+            id: 1,
+            supplier_name: '供应商1',
+            good_name: '商品1',
+            order_num: 100,
+            warehouse_num: 100,
+            purchase_num: 100,
+            purchase_price: 100,
+            total_price: 10000,
+            manifest_id: 1,
+            create_time: '2020-01-01',
+            status: 1
+          },
+          {
+            id: 2,
+            supplier_name: '供应商1',
+            good_name: '商品2',
+            order_num: 100,
+            warehouse_num: 100,
+            purchase_num: 100,
+            purchase_price: 100,
+            total_price: 10000,
+            manifest_id: 1,
+            create_time: '2020-01-01',
+            status: 1
+          },
+          {
+            id: 3,
+            supplier_name: '供应商2',
+            good_name: '商品1',
+            order_num: 100,
+            warehouse_num: 100,
+            purchase_num: 100,
+            purchase_price: 100,
+            total_price: 10000,
+            manifest_id: 1,
+            create_time: '2020-01-01',
+            status: 1
+          },
+          {
+            id: 4,
+            supplier_name: '供应商2',
+            good_name: '商品2',
+            order_num: 100,
+            warehouse_num: 100,
+            purchase_num: 100,
+            purchase_price: 100,
+            total_price: 10000,
+            manifest_id: 1,
+            create_time: '2020-01-01',
+            status: 1
+          }
+        ],
+        [
+          {
+            id: 1,
+            supplier_name: '供应商1',
+            good_name: '商品1',
+            order_num: 100,
+            warehouse_num: 100,
+            purchase_num: 100,
+            purchase_price: 100,
+            total_price: 10000,
+            manifest_id: 1,
+            create_time: '2020-01-01',
+            status: 1
+          },
+          {
+            id: 2,
+            supplier_name: '供应商1',
+            good_name: '商品2',
+            order_num: 100,
+            warehouse_num: 100,
+            purchase_num: 100,
+            purchase_price: 100,
+            total_price: 10000,
+            manifest_id: 1,
+            create_time: '2020-01-01',
+            status: 1
+          },
+          {
+            id: 3,
+            supplier_name: '供应商2',
+            good_name: '商品1',
+            order_num: 100,
+            warehouse_num: 100,
+            purchase_num: 100,
+            purchase_price: 100,
+            total_price: 10000,
+            manifest_id: 1,
+            create_time: '2020-01-01',
+            status: 1
+          },
+          {
+            id: 4,
+            supplier_name: '供应商2',
+            good_name: '商品2',
+            order_num: 100,
+            warehouse_num: 100,
+            purchase_num: 100,
+            purchase_price: 100,
+            total_price: 10000,
+            manifest_id: 1,
+            create_time: '2020-01-01',
+            status: 1
+          }
+        ]
       ]
     }
   },
@@ -175,8 +233,8 @@ export default {
       return sums
     },
     // 修改仓库数量
-    changeWarehouseNum(row) {
-      this.manifest_list.forEach(item => {
+    changeWarehouseNum(row, index) {
+      this.manifest_list[index].forEach(item => {
         if (item.id === row.id) {
           item.warehouse_num = row.warehouse_num
           item.purchase_num = item.order_num - row.warehouse_num
@@ -184,26 +242,8 @@ export default {
         }
       })
     },
-    // 保存货单
-    saveManifest() {
-      this.$confirm('确定要保存货单吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '保存成功!'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消保存'
-        })
-      })
-    },
     // 提交审批
-    submitManifest() {
+    submitManifest(index) {
       this.$confirm('确定要提交审批吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
