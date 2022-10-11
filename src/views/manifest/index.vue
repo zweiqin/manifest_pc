@@ -25,7 +25,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="货单号">
+          <el-form-item label="货单id">
             <el-input v-model="search_form.manifest_no" placeholder="请输入货单号"></el-input>
           </el-form-item>
           <el-button size="mini" type="primary" @click="getManifestList">查找</el-button>
@@ -35,7 +35,7 @@
 
       <!--s货单表格      -->
       <el-table :data="table_data.data" class="el-table" stripe style="width: 100%">
-        <el-table-column label="货单号" min-width="100" prop="manifest_no"></el-table-column>
+        <el-table-column label="货单id" min-width="100" prop="manifest_no"></el-table-column>
         <el-table-column label="货单状态" min-width="100" prop="status">
           <template v-slot="scope">
             <el-tag v-if="scope.row.status === 1" type="primary">待审批</el-tag>
@@ -64,7 +64,7 @@
               size="mini"
               type="primary"
               @click="displayManifest(scope.row)"
-            >查看货单
+            >验收货单
             </el-button>
             <el-button
               size="mini"
@@ -91,45 +91,10 @@
 
     </el-card>
 
-    <!--// TODO (Leo) 2022/9/30 11:57: 上传凭证与货单查看      -->
-    <!-- s上传凭证     -->
-    <el-dialog
-      :visible.sync="upload_visible"
-      title="上传凭证"
-      width="80%"
-    >
-      <el-upload
-        :auto-upload="false"
-        :before-remove="beforeRemove"
-        :file-list="file_list"
-        :limit="1"
-        :on-error="handleError"
-        :on-exceed="handleExceed"
-        :on-preview="handlePictureCardPreview"
-        :on-remove="handleRemove"
-        :on-success="handleSuccess"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        class="upload-demo"
-      >
-        <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-      </el-upload>
-      <el-dialog
-        :visible.sync="previewDialogVisible"
-        width="30%"
-      >
-        <img :src="dialogImageUrl" alt="" width="100%">
-      </el-dialog>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="upload_visible = false">取 消</el-button>
-        <el-button type="primary" @click="uploadCerticificate">确 定</el-button>
-      </span>
-    </el-dialog>
-
-    <!--s 查看货单    -->
+    <!--s上传凭证弹窗    -->
     <el-dialog
       :visible.sync="manifest_visible"
-      title="查看货单"
+      title="验收货单"
       width="80%"
     >
       <div class="manifest-dialog-main">
@@ -169,30 +134,90 @@
           </div>
         </div>
       </div>
-      <div slot="footer" class="manifest-bottom-btn">
-        <el-button size="small" type="primary">审批通过</el-button>
-        <el-button size="small" type="danger" @click="displayRefuse()">审批不通过</el-button>
-      </div>
     </el-dialog>
-    <!--e 查看货单 -->
+    <!--e上传凭证弹窗    -->
 
-    <!--s 审批不通过的备注    -->
+    <!--// TODO (Leo) 2022/9/30 11:57: 上传凭证与货单查看      -->
+    <!-- s上传凭证     -->
     <el-dialog
-      :visible.sync="refuse_visible"
-      title="审批不通过备注"
-      width="50%"
+      :visible.sync="upload_visible"
+      title="上传凭证"
+      width="80%"
     >
-      <el-form ref="refuse_form" :model="refuse_form" :rules="refuse_rules" label-width="80px">
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="refuse_form.remark" type="textarea"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="refuse_visible = false">取 消</el-button>
-        <el-button type="primary" @click="refuseManifest()">确 定</el-button>
+      <el-upload
+        :auto-upload="false"
+        :before-remove="beforeRemove"
+        :file-list="file_list"
+        :limit="1"
+        :on-error="handleError"
+        :on-exceed="handleExceed"
+        :on-preview="handlePictureCardPreview"
+        :on-remove="handleRemove"
+        :on-success="handleSuccess"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        class="upload-demo"
+      >
+        <el-button size="small" type="primary">点击上传</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+      </el-upload>
+      <el-dialog
+        :visible.sync="previewDialogVisible"
+        width="30%"
+      >
+        <img :src="dialogImageUrl" alt="" width="100%">
+      </el-dialog>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="upload_visible = false">取 消</el-button>
+        <el-button type="primary" @click="uploadCerticificate">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- e上传凭证     -->
+
+    <!--s 验收货单    -->
+    <el-dialog
+      :visible.sync="manifest_visible"
+      title="验收货单"
+      width="80%"
+    >
+      <div class="manifest-dialog-main">
+        <div
+          v-for="(item,index) in manifest_list"
+          :key="index"
+          class="manifest-item"
+        >
+          <el-table
+            :data="item"
+            :summary-method="getSummaries"
+            border
+            class="el-table"
+            show-summary
+            style="width: 100%;margin-top: 20px"
+          >
+            <el-table-column label="序号" min-width="80" prop="id"></el-table-column>
+            <el-table-column label="供应商" min-width="180" prop="supplier_name"></el-table-column>
+            <el-table-column label="货物名称" min-width="180" prop="good_name"></el-table-column>
+            <el-table-column label="订单数量" min-width="100" prop="order_num"></el-table-column>
+            <el-table-column label="仓库数量" min-width="120" prop="warehouse_num"></el-table-column>
+            <el-table-column label="采购数量" min-width="100" prop="purchase_num"></el-table-column>
+            <el-table-column label="采购价" min-width="100" prop="purchase_price"></el-table-column>
+            <el-table-column label="采购总价" min-width="180" prop="total_price"></el-table-column>
+            <el-table-column label="货单id" min-width="180" prop="manifest_id"></el-table-column>
+            <el-table-column label="创建时间" min-width="180" prop="create_time"></el-table-column>
+            <!--          // TODO (Leo) 2022/9/30 14:02: 货物状态需要与后端对接-->
+            <el-table-column label="货物状态" min-width="180" prop="status">
+              <template v-slot="scope">
+                <el-tag v-if="scope.row.status === 1" type="success">已提交</el-tag>
+                <el-tag v-else type="danger">未提交</el-tag>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="manifest-item-btn">
+            <el-button size="mini" type="primary">验收</el-button>
+          </div>
+        </div>
       </div>
     </el-dialog>
-    <!--e 审批不通过的备注    -->
+    <!--e 验收货单 -->
   </div>
 </template>
 
@@ -358,20 +383,8 @@ export default {
       upload_visible: false,
       file_list: [],
       previewDialogVisible: false,
-      dialogImageUrl: '', // 预览dialog图片的url
+      dialogImageUrl: '' // 预览dialog图片的url
       // e上传凭证
-
-      // s审批不通过的备注
-      refuse_visible: false,
-      refuse_form: {
-        remark: ''
-      },
-      refuse_rules: {
-        remark: [
-          { required: true, message: '请输入备注', trigger: 'blur' }
-        ]
-      }
-      // e审批不通过的备注
     }
   },
   created() {
@@ -453,31 +466,8 @@ export default {
     },
     handleError(err, file) {
       console.log(err, file)
-    },
-    // e上传凭证
-
-    // s审批不通过的备注
-    // 打开审批不通过的备注框
-    displayRefuse(row) {
-      this.refuse_visible = true
-      this.$nextTick(() => {
-        this.$refs.refuse_form.resetFields()
-      })
-    },
-    // 提交审批不通过的备注
-    refuseManifest() {
-      this.$refs.refuse_form.validate(valid => {
-        if (valid) {
-          this.$message.success('提交成功')
-          this.refuse_visible = false
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
     }
-    // e审批不通过的备注
-
+    // e上传凭证
   }
 }
 </script>

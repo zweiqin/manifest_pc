@@ -25,3 +25,19 @@ export function OperateAdmin(data) {
 export function GetUserInfo(data) {
   return request.get('/v1/admin/GetUserInfo', data)
 }
+
+/*
+ **
+ **供应商管理相关接口
+ **
+ */
+
+// 新增修改供应商
+export function OperateSupplier(data) {
+  return request.post('/v1/supplier/OperateSupplier', data)
+}
+
+// 获取供应商列表
+export function GetSupplierList(data) {
+  return request.get('/v1/supplier/GetSupplierList', data)
+}
