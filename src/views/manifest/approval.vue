@@ -58,13 +58,13 @@
 				<el-table-column prop="team_examine_id" label="审核团队谁人审核的id" min-width="100" />
 				<el-table-column prop="team_examine_status" label="团队审核状态" min-width="100">
 					<template slot-scope="scope">
-						<el-tag v-if="scope.row.team_examine_status==2" type="info">不通过</el-tag>
+						<el-tag v-if="scope.row.team_examine_status==0" type="info">未通过</el-tag>
 						<el-tag v-else type="success">通过</el-tag>
 					</template>
 				</el-table-column>
 				<el-table-column prop="manager_examine_status" label="管理者审核状态" min-width="100">
 					<template slot-scope="scope">
-						<el-tag v-if="scope.row.team_examine_status==2" type="info">不通过</el-tag>
+						<el-tag v-if="scope.row.team_examine_status==0" type="info">未通过</el-tag>
 						<el-tag v-else type="success">通过</el-tag>
 					</template>
 				</el-table-column>
@@ -117,28 +117,28 @@
 				</el-table>
 				<div class="foot-btn">
 					<el-button class="foot-btn-item" type="primary" @click="submitManifest(1)">审批通过</el-button>
-					<el-button size="small" type="danger" @click="submitManifest(2)">审批不通过</el-button>
+					<el-button v-if="is_show_unpass" size="small" type="danger" @click="displayRefuse(2)">审批不通过</el-button>
 				</div>
 			</div>
 		</el-dialog>
 		<!-- e编辑 -->
 
 		<!--s 审批不通过的备注    -->
-		<!--    <el-dialog-->
-		<!--      :visible.sync="refuse_visible"-->
-		<!--      title="审批不通过备注"-->
-		<!--      width="50%"-->
-		<!--    >-->
-		<!--      <el-form ref="refuse_form" :model="refuse_form" :rules="refuse_rules" label-width="80px">-->
-		<!--        <el-form-item label="备注" prop="remark">-->
-		<!--          <el-input v-model="refuse_form.remark" type="textarea"></el-input>-->
-		<!--        </el-form-item>-->
-		<!--      </el-form>-->
-		<!--      <div slot="footer" class="dialog-footer">-->
-		<!--        <el-button @click="refuse_visible = false">取 消</el-button>-->
-		<!--        <el-button type="primary" @click="refuseManifest()">确 定</el-button>-->
-		<!--      </div>-->
-		<!--    </el-dialog>-->
+		<el-dialog
+			:visible.sync="refuse_visible"
+			title="审批不通过备注"
+			width="50%"
+		>
+			<el-form ref="refuse_form" :model="refuse_form" :rules="refuse_rules" label-width="80px">
+				<el-form-item label="备注" prop="remark">
+					<el-input v-model="refuse_form.remark" type="textarea"></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="refuse_visible = false">取 消</el-button>
+				<el-button type="primary" @click="refuseManifest()">确 定</el-button>
+			</div>
+		</el-dialog>
 		<!--e 审批不通过的备注    -->
 
 	</div>
@@ -153,6 +153,7 @@ export default {
 	name: 'goods',
 	data() {
 		return {
+			is_show_unpass: true,
 			search_form: {
 				date: '',
 				page: 1,
@@ -176,7 +177,18 @@ export default {
 
 			edit_visible: false,
 
-			manifest_list: []
+			manifest_list: [],
+
+			refuse_rules: {
+				remark: [
+					{ required: true, message: '请输入备注', trigger: 'blur' }
+				]
+			},
+			refuse_visible: false,
+			refuse_form: {
+				remark: ''
+			}
+
 		}
 	},
 	created() {
@@ -211,6 +223,11 @@ export default {
 					console.log(res)
 					this.tableData.data = res.data.items
 					this.tableData.total = res.data.total
+					if (this.search_form.status === '2') {
+						this.is_show_unpass = false
+					} else {
+						this.is_show_unpass = true
+					}
 				})
 				.catch((err) => {
 					this.$message.error(err)
@@ -263,12 +280,12 @@ export default {
 
 		// 提交审批
 		submitManifest(num) {
-			this.$confirm('确定要通过审批吗？', '提示', {
+			this.$confirm(`确定要${num === 2 ? '不' : ''}通过审批吗？`, '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				ChangeManifestStatus({ id: this.manifest_list[0].manifest_id, status: num, admin_id: localStorage.get('admin_info').admin_id })
+				ChangeManifestStatus({ id: this.manifest_list[0].manifest_id, status: num, admin_id: localStorage.get('admin_info').admin_id, ExamineRemark: this.refuse_form.remark })
 					.then((res) => {
 						console.log(res)
 						this.$message({
@@ -276,7 +293,9 @@ export default {
 							message: '操作成功!'
 						})
 						this.edit_visible = false
+						this.refuse_visible = false
 						this.manifest_list = []
+						this.getList()
 					})
 					.catch((err) => {
 						console.log(err)
@@ -289,7 +308,27 @@ export default {
 						message: '已取消提交'
 					})
 				})
+		},
+		// s审批不通过的备注
+		// 打开审批不通过的备注框
+		displayRefuse(num) {
+			this.refuse_visible = true
+			this.$nextTick(() => {
+				this.$refs.refuse_form.resetFields()
+			})
+		},
+		// 提交审批不通过的备注
+		refuseManifest() {
+			this.$refs.refuse_form.validate((valid) => {
+				if (valid) {
+					this.submitManifest(2)
+				} else {
+					console.log('error submit!!')
+					return false
+				}
+			})
 		}
+
 	}
 }
 </script>

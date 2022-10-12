@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { CreateManifest, GetManifestList, ChangeManifestStatus } from '@/api/manifest'
+import { CreateManifest, GetManifestList, ChangeManifestStatus, UpdateManifestNum } from '@/api/manifest'
 import localStorage from '@/utils/localStorage'
 export default {
 	name: 'goods',
@@ -174,7 +174,21 @@ export default {
 		},
 		// 确认仓库数量
 		confirmStore() {
-			this.is_confirm = true
+			const tempObj = JSON.parse(JSON.stringify(this.manifest_list))
+			tempObj.forEach((item) => item.purchase_num = String(item.purchase_num))
+			UpdateManifestNum({ data: tempObj })
+				.then((res) => {
+					console.log(res)
+					this.is_confirm = true
+					this.$message({
+						type: 'success',
+						message: '确认成功!'
+					})
+				})
+				.catch((err) => {
+					console.log(err)
+					this.$message.error(err.data.data)
+				})
 		},
 		// 提交审批
 		submitManifest() {
