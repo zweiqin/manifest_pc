@@ -67,8 +67,10 @@
 </template>
 
 <script>
-import { CreateManifest, GetManifestList, ChangeManifestStatus, UpdateManifestNum } from '@/api/manifest'
+import { ChangeManifestStatus, CreateManifest, GetManifestList, UpdateManifestNum } from '@/api/manifest'
+import { GetTeamUserInfo } from '@/api/admin'
 import localStorage from '@/utils/localStorage'
+
 export default {
 	name: 'goods',
 	data() {
@@ -76,13 +78,42 @@ export default {
 			date: '',
 			manifest_list: [],
 			// store_disabled: false,
-			is_confirm: false
+			is_confirm: false,
+
+			is_manager: false, // (leo) : 是否是团队管理员
+			is_member: false // (leo) : 是否是团队成员
 		}
 	},
 	created() {
 		// console.log(localStorage.get('admin_info'))
+		this.hasPermission()
 	},
 	methods: {
+		// (leo)  判断是否有权限
+		hasPermission() {
+			// (leo) : 判断是否是团队成员或是团队管理员
+			const admin_id = String(localStorage.get('admin_info').admin_id)
+			GetTeamUserInfo({ id: 1 })
+				.then((res) => {
+					// 判断是否是团队成员
+					if (res.data.id_list.includes(admin_id)) {
+						this.is_member = true
+						console.warn('团队成员')
+					}
+					// 判断是否是团队管理员
+					if (res.data.manager_id === admin_id) {
+						this.is_manager = true
+						console.warn('管理员')
+					}
+					if (this.is_member === false && this.is_manager === false) {
+						this.$message.error('您没有权限访问该页面')
+						this.$router.push({ path: '/welcome/index' })
+					}
+				})
+				.catch((err) => {
+					this.$message.error(err.data.msg)
+				})
+		},
 		// 更改日期时获得当天货单列表（如果有的话）
 		getGoodsList() {
 			console.log(this.date)

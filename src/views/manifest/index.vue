@@ -249,16 +249,10 @@
 </template>
 
 <script>
-import {
-	GetManifestList,
-	GetPurchaseList,
-	GetDmcList,
-	UpdateDmc,
-	AddPhoto,
-	PayPurchase
-} from '@/api/manifest'
+import { AddPhoto, GetDmcList, GetManifestList, GetPurchaseList, PayPurchase, UpdateDmc } from '@/api/manifest'
 import localStorage from '@/utils/localStorage'
 import { getToken } from '@/utils/auth'
+import { GetTeamUserInfo } from '@/api/admin'
 
 export default {
 	name: 'index',
@@ -339,14 +333,43 @@ export default {
 				mer_id: localStorage.get('admin_info').mer_id,
 				provider_id: 0
 			},
-			fileList: [] // 附件列表
+			fileList: [], // 附件列表
+
+			is_manager: false, // (leo) : 是否是团队管理员
+			is_member: false // (leo) : 是否是团队成员
 
 		}
 	},
 	created() {
+		this.hasPermission()
 		this.getList()
 	},
 	methods: {
+		// (leo)  判断是否有权限
+		hasPermission() {
+			// (leo) : 判断是否是团队成员或是团队管理员
+			const admin_id = String(localStorage.get('admin_info').admin_id)
+			GetTeamUserInfo({ id: 3 })
+				.then((res) => {
+					// 判断是否是团队成员
+					if (res.data.id_list.includes(admin_id)) {
+						this.is_member = true
+						console.warn('团队成员')
+					}
+					// 判断是否是团队管理员
+					if (res.data.manager_id === admin_id) {
+						this.is_manager = true
+						console.warn('管理员')
+					}
+					if (this.is_member === false && this.is_manager === false) {
+						this.$message.error('您没有权限访问该页面')
+						this.$router.push({ path: '/welcome/index' })
+					}
+				})
+				.catch((err) => {
+					this.$message.error(err.data.msg)
+				})
+		},
 		// 获取货单列表数据 // 列表
 		getList(num) {
 			this.search_form.create_time_r = this.range[0]

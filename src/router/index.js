@@ -1,14 +1,19 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 /* Layout */
+
 import Layout from '@/layout'
 
 /* Router Modules */
+
 import zhAi from './modules/zh-ai'
 import admin from './modules/admin'
 import test from './modules/test'
 import manifest from './modules/manifest'
 import shop from './modules/shop'
+import welcome from './modules/welcome'
+import company_wx from './modules/company_wx'
 
 Vue.use(Router)
 
@@ -38,44 +43,47 @@ Vue.use(Router)
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+
 export const constantRoutes = [
-  {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index')
-        // component: () => import('@/views/qcmsgAdd/mechantImport')
-      }
-    ]
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
-    hidden: true
-  },
-  zhAi,
-  admin,
-  test, // 测试页面（上线即注释掉）
-  manifest,
-  shop,
-  {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
-  }
+	{
+		path: '/redirect',
+		component: Layout,
+		hidden: true,
+		children: [
+			{
+				path: '/redirect/:path(.*)',
+				component: () => import('@/views/redirect/index')
+				// component: () => import('@/views/qcmsgAdd/mechantImport')
+			}
+		]
+	},
+	{
+		path: '/login',
+		component: () => import('@/views/login/index'),
+		hidden: true
+	},
+	{
+		path: '/auth-redirect',
+		component: () => import('@/views/login/auth-redirect'),
+		hidden: true
+	},
+	zhAi,
+	admin,
+	test, // 测试页面（上线即注释掉）
+	manifest,
+	shop,
+	welcome,
+	company_wx,
+	{
+		path: '/404',
+		component: () => import('@/views/error-page/404'),
+		hidden: true
+	},
+	{
+		path: '/401',
+		component: () => import('@/views/error-page/401'),
+		hidden: true
+	}
 ]
 
 /**
@@ -84,77 +92,76 @@ export const constantRoutes = [
  */
 // 临时的，不一定有↓ ，有admin则加上去
 export const asyncRoutes = [
-  /** when your routing map is too long, you can split it into small modules **/
+	/** when your routing map is too long, you can split it into small modules **/
 
-  {
-    path: '/error',
-    hidden: true,
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'ErrorPages',
-    meta: {
-      title: 'Error Pages',
-      icon: '404'
-    },
-    children: [
-      {
-        path: '401',
-        component: () => import('@/views/error-page/401'),
-        name: 'Page401',
-        meta: { title: '401', noCache: true }
-      },
-      {
-        path: '404',
-        component: () => import('@/views/error-page/404'),
-        name: 'Page404',
-        meta: { title: '404', noCache: true }
-      }
-    ]
-  },
+	{
+		path: '/error',
+		hidden: true,
+		component: Layout,
+		redirect: 'noRedirect',
+		name: 'ErrorPages',
+		meta: {
+			title: 'Error Pages',
+			icon: '404'
+		},
+		children: [
+			{
+				path: '401',
+				component: () => import('@/views/error-page/401'),
+				name: 'Page401',
+				meta: { title: '401', noCache: true }
+			},
+			{
+				path: '404',
+				component: () => import('@/views/error-page/404'),
+				name: 'Page404',
+				meta: { title: '404', noCache: true }
+			}
+		]
+	},
 
-  {
-    path: '/error-log',
-    hidden: true,
-    component: Layout,
-    children: [
-      {
-        path: 'log',
-        component: () => import('@/views/error-log/index'),
-        name: 'ErrorLog',
-        meta: { title: 'Error Log', icon: 'bug' }
-      }
-    ]
-  },
+	{
+		path: '/error-log',
+		hidden: true,
+		component: Layout,
+		children: [
+			{
+				path: 'log',
+				component: () => import('@/views/error-log/index'),
+				name: 'ErrorLog',
+				meta: { title: 'Error Log', icon: 'bug' }
+			}
+		]
+	},
 
-  {
-    path: 'external-link',
-    hidden: true,
-    component: Layout,
-    children: [
-      {
-        path: 'https://github.com/PanJiaChen/vue-element-admin',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
+	{
+		path: 'external-link',
+		hidden: true,
+		component: Layout,
+		children: [
+			{
+				path: 'https://github.com/PanJiaChen/vue-element-admin',
+				meta: { title: 'External Link', icon: 'link' }
+			}
+		]
+	},
 
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+	// 404 page must be placed at the end !!!
+	{ path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () =>
-  new Router({
-    mode: 'history', // require service support
-    scrollBehavior: () => ({ y: 0 }),
-    routes: constantRoutes
-  })
+const createRouter = () => new Router({
+	mode: 'history', // require service support
+	scrollBehavior: () => ({ y: 0 }),
+	routes: constantRoutes
+})
 
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+	const newRouter = createRouter()
+	router.matcher = newRouter.matcher // reset router
 }
 
 export default router

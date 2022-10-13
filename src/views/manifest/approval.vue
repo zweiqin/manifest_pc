@@ -146,8 +146,9 @@
 </template>
 
 <script>
-import { GetManifestList, ChangeManifestStatus } from '@/api/manifest'
+import { ChangeManifestStatus, GetManifestList } from '@/api/manifest'
 import localStorage from '@/utils/localStorage'
+import { GetTeamUserInfo } from '@/api/admin'
 
 export default {
 	name: 'goods',
@@ -187,15 +188,44 @@ export default {
 			refuse_visible: false,
 			refuse_form: {
 				remark: ''
-			}
+			},
+
+			is_manager: false, // (leo) : 是否是团队管理员
+			is_member: false // (leo) : 是否是团队成员
 
 		}
 	},
 	created() {
 		console.log(this.search_form)
+		this.hasPermission()
 		this.getList(1)
 	},
 	methods: {
+		// (leo)  判断是否有权限
+		hasPermission() {
+			// (leo) : 判断是否是团队成员或是团队管理员
+			const admin_id = String(localStorage.get('admin_info').admin_id)
+			GetTeamUserInfo({ id: 2 })
+				.then((res) => {
+					// 判断是否是团队成员
+					if (res.data.id_list.includes(admin_id)) {
+						this.is_member = true
+						console.warn('团队成员')
+					}
+					// 判断是否是团队管理员
+					if (res.data.manager_id === admin_id) {
+						this.is_manager = true
+						console.warn('管理员')
+					}
+					if (this.is_member === false && this.is_manager === false) {
+						this.$message.error('您没有权限访问该页面')
+						this.$router.push({ path: '/welcome/index' })
+					}
+				})
+				.catch((err) => {
+					this.$message.error(err.data.msg)
+				})
+		},
 		changeDate(e) {
 			console.log(e)
 		},
