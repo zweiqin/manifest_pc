@@ -30,3 +30,24 @@ export function ChangeManifestStatus(data) {
 export function UpdateManifestNum(data) {
 	return request.put('/v1/product/UpdateManifestNum', data, { login: false })
 }
+
+// 查询商户下的Dmc信息
+export function GetDmcList(data) {
+	return request.get('/v1/dmc/GetDmcList', data)
+}
+
+// 更新DMC信息,只可以更改名字和状态
+export function UpdateDmc(data) {
+	return request.put('/v1/dmc/UpdateDmc', data)
+}
+
+// 上传采购凭证
+export function AddPhoto(data) {
+	return request.put('/v1/purchase/AddPhoto', data)
+}
+
+// 上传采购凭证
+export function PayPurchase(data) {
+	return request.put('/v1/purchase/PayPurchase', data)
+}
+

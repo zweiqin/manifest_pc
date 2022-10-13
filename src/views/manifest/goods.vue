@@ -174,7 +174,8 @@ export default {
 		},
 		// 确认仓库数量
 		confirmStore() {
-			const tempObj = JSON.parse(JSON.stringify(this.manifest_list))
+			// const tempObj = JSON.parse(JSON.stringify(this.manifest_list))
+			const tempObj = this.$deepClone(this.manifest_list)
 			tempObj.forEach((item) => item.purchase_num = String(item.purchase_num))
 			UpdateManifestNum({ data: tempObj })
 				.then((res) => {
