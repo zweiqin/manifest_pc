@@ -47,7 +47,8 @@
     "vuex": "3.1.0",
     "vxe-table": "^4.0.23",
     "xe-utils": "^3.3.0",
-    "xlsx": "0.14.1"
+    "xlsx": "0.14.1",
+    "xlsx-populate": "^1.21.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "4.4.4",

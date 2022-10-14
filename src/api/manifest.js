@@ -46,8 +46,33 @@ export function AddPhoto(data) {
 	return request.put('/v1/purchase/AddPhoto', data)
 }
 
-// 上传采购凭证
+// 采购人员审核
 export function PayPurchase(data) {
 	return request.put('/v1/purchase/PayPurchase', data)
+}
+
+// 获取验收单列表
+export function GetAcceptList(data) {
+	return request.get('/v1/purchase/GetAcceptList', data)
+}
+
+// 验收人员审核
+export function AcceptPurchase(data) {
+	return request.put('/v1/purchase/AcceptPurchase', data)
+}
+
+// 获取供应商列表
+export function GetSupplierList(data) {
+	return request.get('/v1/supplier/GetSupplierList', data)
+}
+
+// 获取订单信息列表
+export function GetOrder(data) {
+	return request.get('/v1/order/GetOrder', data)
+}
+
+// 获取发货单列表
+export function GetDeliverList(data) {
+	return request.get('/v1/purchase/GetDeliverList', data)
 }
 

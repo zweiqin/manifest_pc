@@ -35,7 +35,7 @@
 								v-model="scope.row.store_num"
 								style="width: 100px"
 								:disabled="is_confirm"
-								@change="changeWarehouseNum(scope.row)"
+								@input="changeWarehouseNum(scope.row)"
 							></el-input>
 						</template>
 					</el-table-column>
@@ -57,7 +57,9 @@
 					<el-button class="foot-btn-item" type="primary" @click="confirmStore()">确认仓库数量</el-button>
 				</div>
 				<div v-else class="foot-btn">
-					<el-button class="foot-btn-item" type="primary" @click="submitManifest()">提交审批</el-button>
+					<!--          团队或经理里面任何一个人提交就行-->
+					<el-button v-if="!team_examine_status&&!manager_examine_status" class="foot-btn-item" type="primary" @click="submitManifest()">提交审批</el-button>
+					<!--					<el-button v-if="is_manager&&!manager_examine_status&&team_examine_status" class="foot-btn-item" type="primary" @click="submitManifest()">提交审批</el-button>-->
 				</div>
 			</div>
 
@@ -79,6 +81,8 @@ export default {
 			manifest_list: [],
 			// store_disabled: false,
 			is_confirm: false,
+			team_examine_status: '',
+			manager_examine_status: '',
 
 			is_manager: false, // (leo) : 是否是团队管理员
 			is_member: false // (leo) : 是否是团队成员
@@ -87,6 +91,11 @@ export default {
 	created() {
 		// console.log(localStorage.get('admin_info'))
 		this.hasPermission()
+		const temp_date = new Date()
+		// this.$moment('')
+		this.date = this.$moment().format('YYYY-MM-DD')
+		// this.date = temp_date.getFullYear() + '-' + (Number(temp_date.getMonth()) + 1) + '-' + temp_date.getDate()
+		// console.log(this.date)
 	},
 	methods: {
 		// (leo)  判断是否有权限
@@ -139,6 +148,8 @@ export default {
 										item.total_price = item.purchase_num * item.cost
 									})
 									this.manifest_list = res.data.items[0].ProductList
+									this.team_examine_status = res.data.items[0].team_examine_status
+									this.manager_examine_status = res.data.items[0].manager_examine_status
 									this.$message({
 										type: 'success',
 										message: '生成成功!'

@@ -54,18 +54,20 @@
 						<el-tag v-else-if="scope.row.status==7" type="success">提交审核</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column prop="create_time" label="创建时间" min-width="100" />
-				<el-table-column prop="team_examine_id" label="审核团队谁人审核的id" min-width="100" />
+				<el-table-column prop="create_time" label="创建时间" min-width="150" />
+				<el-table-column prop="team_examine_id" label="团队审核成员id" min-width="100" />
 				<el-table-column prop="team_examine_status" label="团队审核状态" min-width="100">
 					<template slot-scope="scope">
-						<el-tag v-if="scope.row.team_examine_status==0" type="info">未通过</el-tag>
-						<el-tag v-else type="success">通过</el-tag>
+						<el-tag v-if="scope.row.team_examine_status==0" type="info">未审核</el-tag>
+						<el-tag v-else-if="scope.row.team_examine_status==1" type="success">通过</el-tag>
+						<el-tag v-else type="success">不通过</el-tag>
 					</template>
 				</el-table-column>
 				<el-table-column prop="manager_examine_status" label="管理者审核状态" min-width="100">
 					<template slot-scope="scope">
-						<el-tag v-if="scope.row.team_examine_status==0" type="info">未通过</el-tag>
-						<el-tag v-else type="success">通过</el-tag>
+						<el-tag v-if="scope.row.manager_examine_status==0" type="info">未审核</el-tag>
+						<el-tag v-else-if="scope.row.team_examine_status==1" type="success">通过</el-tag>
+						<el-tag v-else type="success">不通过</el-tag>
 					</template>
 				</el-table-column>
 				<el-table-column prop="examine_remark" label="审核不通过描述" min-width="100" />
@@ -108,7 +110,7 @@
 					<el-table-column label="采购总价" min-width="180" prop="total_price"></el-table-column>
 					<el-table-column label="货单id" min-width="180" prop="manifest_id"></el-table-column>
 					<el-table-column label="创建时间" min-width="180" prop="create_time"></el-table-column>
-					<el-table-column label="货物状态" min-width="180" prop="accept_status">
+					<el-table-column label="验收状态" min-width="180" prop="accept_status">
 						<template v-slot="scope">
 							<el-tag v-if="scope.row.status === 1" type="success">成功验收</el-tag>
 							<el-tag v-else type="danger">还没有验收</el-tag>
@@ -116,8 +118,10 @@
 					</el-table-column>
 				</el-table>
 				<div class="foot-btn">
-					<el-button class="foot-btn-item" type="primary" @click="submitManifest(1)">审批通过</el-button>
-					<el-button v-if="is_show_unpass" size="small" type="danger" @click="displayRefuse(2)">审批不通过</el-button>
+					<el-button v-if="is_member&&!team_examine_status" class="foot-btn-item" type="primary" @click="submitManifest(1)">审批通过</el-button>
+					<el-button v-if="is_manager&&!manager_examine_status&&team_examine_status===1" class="foot-btn-item" type="primary" @click="submitManifest(1)">审批通过</el-button>
+					<el-button v-if="is_member&&is_show_unpass&&!team_examine_status" type="danger" @click="displayRefuse(2)">审批不通过</el-button>
+					<el-button v-if="is_manager&&is_show_unpass&&!manager_examine_status&&team_examine_status===1" type="danger" @click="displayRefuse(2)">审批不通过</el-button>
 				</div>
 			</div>
 		</el-dialog>
@@ -161,7 +165,9 @@ export default {
 				status: '7',
 				limit: 10,
 				create_time_l: '',
-				create_time_r: ''
+				create_time_r: '',
+				team_examine_status: '',
+				manager_examine_status: ''
 			},
 			tableData: {
 				data: [],
@@ -190,22 +196,25 @@ export default {
 				remark: ''
 			},
 
+			team_examine_status: '',
+			manager_examine_status: '',
+
 			is_manager: false, // (leo) : 是否是团队管理员
 			is_member: false // (leo) : 是否是团队成员
 
 		}
 	},
-	created() {
+	async created() {
 		console.log(this.search_form)
-		this.hasPermission()
+		await this.hasPermission()
 		this.getList(1)
 	},
 	methods: {
 		// (leo)  判断是否有权限
-		hasPermission() {
+		async hasPermission() {
 			// (leo) : 判断是否是团队成员或是团队管理员
 			const admin_id = String(localStorage.get('admin_info').admin_id)
-			GetTeamUserInfo({ id: 2 })
+			await GetTeamUserInfo({ id: 2 })
 				.then((res) => {
 					// 判断是否是团队成员
 					if (res.data.id_list.includes(admin_id)) {
@@ -245,6 +254,12 @@ export default {
 
 		// 列表
 		getList(num) {
+			if (this.is_member) {
+				this.search_form.team_examine_status = 0
+			} else {
+				this.search_form.team_examine_status = 1
+				this.search_form.manager_examine_status = 0
+			}
 			this.search_form.create_time_r = this.range[0]
 			this.search_form.create_time_l = this.range[1]
 			this.search_form.page = num || this.search_form.page
@@ -282,6 +297,10 @@ export default {
 			})
 			this.manifest_list = e.ProductList
 			this.edit_visible = true
+			this.team_examine_status = e.team_examine_status
+			this.manager_examine_status = e.manager_examine_status
+			console.log(this.manager_examine_status, this.team_examine_status)
+			console.log(this.is_manager && !this.manager_examine_status && this.team_examine_status === 1)
 		},
 		// 合计采购总价
 		getSummaries(param) {
@@ -383,6 +402,11 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .block {
+    float: right;
+    margin: 20px 0;
   }
 }
 </style>

@@ -39,21 +39,21 @@
 				<el-table-column label="货单id" min-width="100" prop="id"></el-table-column>
 				<el-table-column label="货单状态" min-width="125" prop="status">
 					<template v-slot="scope">
-						<el-tag v-if="scope.row.status === 1" type="primary">审核通过</el-tag>
+						<el-tag v-if="scope.row.status === 1" type="primary">待批款</el-tag>
 						<el-tag v-else-if="scope.row.status === 3" type="danger">已批款（整张货单）</el-tag>
 						<!--						<el-tag v-else-if="scope.row.status === 5" type="warning">收到货（整张货单）</el-tag>-->
 					</template>
 				</el-table-column>
-				<el-table-column label="货单日志" min-width="300" prop="log">
-					<template v-slot="scope">
-						<div class="table-log">
-							<div v-for="(item,index) in scope.row.log_list" :key="index" class="table-log-item">
-								<div class="log-action">{{ item.log_action }}</div>
-								<div class="log-time">{{ item.log_time }}</div>
-							</div>
-						</div>
-					</template>
-				</el-table-column>
+				<!--				<el-table-column label="货单日志" min-width="300" prop="log">-->
+				<!--					<template v-slot="scope">-->
+				<!--						<div class="table-log">-->
+				<!--							<div v-for="(item,index) in scope.row.log_list" :key="index" class="table-log-item">-->
+				<!--								<div class="log-action">{{ item.log_action }}</div>-->
+				<!--								<div class="log-time">{{ item.log_time }}</div>-->
+				<!--							</div>-->
+				<!--						</div>-->
+				<!--					</template>-->
+				<!--				</el-table-column>-->
 				<el-table-column label="创建时间" min-width="180" prop="create_time"></el-table-column>
 				<!--				<el-table-column label="完成时间" min-width="180" prop="finish_time"></el-table-column>-->
 				<!--        // TODO (Leo) 2022/9/30 11:35: 上传凭证按钮权限（待付款状态，且是财务部门才可显示）-->
@@ -72,8 +72,8 @@
 			</el-table>
 			<div class="block" style="margin-top: 20px">
 				<el-pagination
-					:current-page="table_data.page"
-					:page-size="table_data.limit"
+					:current-page="search_form.page"
+					:page-size="search_form.limit"
 					:page-sizes="[10, 20, 30, 40]"
 					:total="table_data.total"
 					layout="total, sizes, prev, pager, next, jumper"
@@ -87,8 +87,9 @@
 
 		<!--s批款弹窗    -->
 		<el-dialog
+			:close="handleCloseBuy"
 			:visible.sync="merge_visible"
-			title="验收货单"
+			title="采购单批款"
 			width="80%"
 		>
 			<div class="manifest-dialog-main">
@@ -127,20 +128,43 @@
 						</el-table-column>
 						<el-table-column label="管理员批款状态" min-width="180" prop="manager_accept_status">
 							<template v-slot="scope">
-								<el-tag v-if="scope.row.manager_accept_status === '1'" type="success">已批款</el-tag>
+								<el-tag v-if="scope.row.manager_pay_status === '1'" type="success">已批款</el-tag>
 								<el-tag v-else type="danger">待批款</el-tag>
 							</template>
 						</el-table-column>
 					</el-table>
 					<div class="manifest-item-btn">
-						<el-button size="mini" type="primary" @click="uploadVoucher(item)">上传凭证</el-button>
-						<el-button size="mini" type="primary" @click="confirmAccept(merge_list[index],1)">批款通过</el-button>
-						<el-button size="mini" type="primary" @click="confirmAccept(merge_list[index],2)">批款不通过</el-button>
+						<el-button v-if="is_member&&!Number(item.purchase_list[0].team_pay_status)" size="mini" type="primary" @click="uploadVoucher(item)">上传凭证</el-button>
+						<el-button v-if="item.purchase_list[0].upload" size="mini" type="primary" @click="showCheck(item.purchase_list[0].upload)">查看凭证</el-button>
+						<el-button v-if="is_member&&!Number(item.purchase_list[0].team_pay_status)&&item.purchase_list[0].upload" size="mini" type="primary" @click="confirmAccept(merge_list[index],1)">批款通过</el-button>
+						<el-button v-if="is_manager&&!Number(item.purchase_list[0].manager_pay_status)&&item.purchase_list[0].team_pay_status==='1'" size="mini" type="primary" @click="confirmAccept(merge_list[index],1)">批款通过</el-button>
+						<el-button v-if="is_manager&&Number(item.purchase_list[0].team_pay_status)&&!Number(item.purchase_list[0].manager_pay_status)" size="mini" type="primary" @click="confirmAccept(merge_list[index],2)">批款不通过</el-button>
 					</div>
 				</div>
 			</div>
 		</el-dialog>
 		<!--e批款弹窗    -->
+
+		<!-- s查看凭证 -->
+		<el-dialog
+			:visible.sync="check_visible"
+			title="查看凭证"
+			width="60%"
+		>
+			<el-form
+				ref="checkForm"
+				:model="checkForm"
+				label-width="80px"
+			>
+				<el-form-item label="查看凭证" prop="image">
+					<el-image :src="'http://'+checkForm.url" :preview-src-list="['http://'+checkForm.url]" style="width: 100px;height: 100px;cursor:pointer"></el-image>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="check_visible = false">关 闭</el-button>
+			</span>
+		</el-dialog>
+		<!-- e查看凭证 -->
 
 		<!-- s上传凭证 -->
 		<el-dialog
@@ -156,7 +180,7 @@
 				label-width="80px"
 			>
 				<el-form-item label="提交附件" prop="image">
-					<el-image v-if="addForm.file_id" :src="'http://'+addForm.file_path_url" style="width: 100px;height: 100px;cursor:pointer" @click="viewFile(1)"></el-image>
+					<el-image v-if="addForm.file_id||addForm.file_path_url" :src="'http://'+addForm.file_path_url" style="width: 100px;height: 100px;cursor:pointer" @click="viewFile(1)"></el-image>
 					<div v-if="addForm.file_name">{{ addForm.file_name }}</div>
 					<el-button v-if="addForm.file_id" type="text" size="mini" @click="removeFile(1)">删除附件</el-button>
 					<el-button v-if="addForm.file_id === '' " type="primary" size="mini" @click="viewFile(1)">附件选择</el-button>
@@ -169,54 +193,56 @@
 		</el-dialog>
 		<!-- e上传凭证 -->
 		<!-- s 附件选择 -->
-		<el-dialog :visible.sync="file_visible" title="附件选择" width="70%">
-			<div>
-				<el-button size="mini" type="primary" @click="upload_visible = true">附件上传</el-button>
-			</div>
-			<el-table :data="file_table.data" style="width: 100%">
-				<el-table-column prop="file_name" label="文件名" width="200"></el-table-column>
-				<el-table-column prop="file_type" label="文件类型" width="100">
-					<template v-slot="scope">
-						{{ '图片' }}
-					</template>
-				</el-table-column>
-				<el-table-column prop="file_path_url" label="照片" min-width="100">
-					<template slot-scope="scope">
-						<el-image
-							ref="lazyImg"
-							class="vx-lazyLoad"
-							:src="'http://'+scope.row.file_path_url"
-							fit="fit"
-							:preview-src-list="['http://'+scope.row.file_path_url]"
-							style="width: 100px; height: 100px"
-						>
-							<div slot="placeholder" class="image-slot">
-								<i class="el-icon-loading"></i>加载中
-							</div>
-							<div slot="error" class="image-slot">
-								<i class="el-icon-picture-outline"></i>
-							</div>
-						</el-image>
-					</template>
-				</el-table-column>
-				<el-table-column prop="create_time" label="上传时间" min-width="200"></el-table-column>
-				<el-table-column label="操作" width="200">
-					<template v-slot="scope">
-						<el-button size="mini" type="primary" @click="select_file(scope.row)">选择</el-button>
-						<el-button size="mini" type="danger" @click="delete_file(scope.row)">删除</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
-			<div class="block" style="display:flex;flex-direction: row-reverse;margin: 20px 0">
-				<el-pagination
-					:current-page="file_form.page"
-					:page-size="file_form.limit"
-					:page-sizes="[10, 20, 30, 40]"
-					:total="file_table.total"
-					layout="total, sizes, prev, pager, next, jumper"
-					@size-change="handleFileSizeChange"
-					@current-change="handleFileCurrentChange"
-				></el-pagination>
+		<el-dialog style="overflow: hidden" :visible.sync="file_visible" title="附件选择" width="70%">
+			<div style="overflow: hidden">
+				<div>
+					<el-button size="mini" type="primary" @click="upload_visible = true">附件上传</el-button>
+				</div>
+				<el-table :data="file_table.data" style="width: 100%">
+					<el-table-column prop="file_name" label="文件名" width="200"></el-table-column>
+					<el-table-column prop="file_type" label="文件类型" width="100">
+						<template v-slot="scope">
+							{{ '图片' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="file_path_url" label="照片" min-width="100">
+						<template slot-scope="scope">
+							<el-image
+								ref="lazyImg"
+								class="vx-lazyLoad"
+								:src="'http://'+scope.row.file_path_url"
+								fit="fit"
+								:preview-src-list="['http://'+scope.row.file_path_url]"
+								style="width: 100px; height: 100px"
+							>
+								<div slot="placeholder" class="image-slot">
+									<i class="el-icon-loading"></i>加载中
+								</div>
+								<div slot="error" class="image-slot">
+									<i class="el-icon-picture-outline"></i>
+								</div>
+							</el-image>
+						</template>
+					</el-table-column>
+					<el-table-column prop="create_time" label="上传时间" min-width="200"></el-table-column>
+					<el-table-column label="操作" width="200">
+						<template v-slot="scope">
+							<el-button size="mini" type="primary" @click="select_file(scope.row)">选择</el-button>
+							<el-button size="mini" type="danger" @click="delete_file(scope.row)">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<div class="block" style="margin: 20px 0">
+					<el-pagination
+						:current-page="file_form.page"
+						:page-size="file_form.limit"
+						:page-sizes="[10, 20, 30, 40]"
+						:total="file_table.total"
+						layout="total, sizes, prev, pager, next, jumper"
+						@size-change="handleFileSizeChange"
+						@current-change="handleFileCurrentChange"
+					></el-pagination>
+				</div>
 			</div>
 		</el-dialog>
 		<!-- e 附件选择 -->
@@ -305,6 +331,10 @@ export default {
 			},
 			addRules: {
 			},
+			checkForm: {
+				url: ''
+			},
+			check_visible: false,
 
 			// file_src: require('../../assets/images/zip.webp'),
 			// s附件
@@ -334,6 +364,7 @@ export default {
 				provider_id: 0
 			},
 			fileList: [], // 附件列表
+			row: '',
 
 			is_manager: false, // (leo) : 是否是团队管理员
 			is_member: false // (leo) : 是否是团队成员
@@ -420,6 +451,7 @@ export default {
 		// 查看货单
 		displayManifest(row) {
 			// console.log(row)
+			this.row = row
 			GetPurchaseList({ manifest_id: row.id })
 				.then((res) => {
 					console.log(res)
@@ -439,6 +471,11 @@ export default {
 		uploadVoucher(item) {
 			this.add_visible = true
 			this.addForm.item = item
+			this.addForm.file_path_url = item.purchase_list[0].upload
+		},
+		showCheck(url) {
+			this.check_visible = true
+			this.checkForm.url = url
 		},
 
 		confirmAccept(item, num) {
@@ -450,9 +487,10 @@ export default {
 						type: 'success',
 						message: '操作成功!'
 					})
-					this.merge_visible = false
+					// this.merge_visible = false
 					this.merge_list = []
-					this.getList()
+					this.displayManifest(this.row)
+					// this.getList()
 				})
 				.catch((err) => {
 					console.log(err)
@@ -467,6 +505,11 @@ export default {
 				})
 				.catch((_) => {
 				})
+		},
+
+		handleCloseBuy(done) {
+			this.getList()
+			done()
 		},
 
 		// s附件选择与上传
@@ -539,12 +582,14 @@ export default {
 			console.warn('handleSuccess', res, file)
 			if (res.status === 200) {
 				this.fileList = []
-				this.upload_visible = false
 				this.$message({
 					message: '上传成功',
 					type: 'success'
 				})
-				this.getAllFile()
+				setTimeout(() => {
+					this.upload_visible = false
+					this.getAllFile()
+				}, 1000)
 			} else {
 				this.$message.error(res.msg)
 				this.fileList = []
@@ -589,6 +634,7 @@ export default {
 							this.addForm.file_name = ''
 							this.addForm.file_path_url = ''
 							this.add_visible = false
+							this.displayManifest(this.row)
 						})
 						.catch((err) => {
 							this.$message.error(err.data.msg)
@@ -669,6 +715,10 @@ export default {
     //bottom: 0;
     display: flex;
     justify-content: center;
+  }
+  .block {
+    float: right;
+    margin: 20px 0;
   }
 }
 </style>
