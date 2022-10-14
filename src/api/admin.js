@@ -42,6 +42,16 @@ export function GetSupplierList(data) {
 	return request.get('/v1/supplier/GetSupplierList', data)
 }
 
+// 获取供应商联系人列表
+export function GetSupplierUserList(data) {
+	return request.get('/v1/supplier/GetSupplierUserList', data)
+}
+
+// 新增更改供应商联系人
+export function CreateSupplierUser(data) {
+	return request.post('/v1/supplier/CreateSupplierUser', data)
+}
+
 /*
  **
  **团队管理相关接口

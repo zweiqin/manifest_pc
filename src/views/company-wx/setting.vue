@@ -15,9 +15,9 @@
 				<el-form-item>
 					<el-button type="primary" @click="submitForm('setting_form')">保存</el-button>
 				</el-form-item>
-				<el-form-item>
-					<el-button type="text" @click="pushTest()">测试推送</el-button>
-				</el-form-item>
+				<!--				<el-form-item>-->
+				<!--					<el-button type="text" @click="pushTest()">测试推送</el-button>-->
+				<!--				</el-form-item>-->
 			</el-form>
 
 		</el-card>

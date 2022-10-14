@@ -18,12 +18,12 @@ export function PullNewList(data) {
 
 // 获取企业微信推送设置
 export function GetConfig(data) {
-	return request.get('/v1/wx/GetConfig', data)
+	return request.get('/v1/config/GetConfig', data)
 }
 
 // 修改企业微信推送设置
 export function UpdateConfig(data) {
-	return request.put('/v1/wx/UpdateConfig', data)
+	return request.put('/v1/config/UpdateConfig', data)
 }
 
 // 推送测试消息
