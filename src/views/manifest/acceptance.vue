@@ -140,17 +140,17 @@ export default {
 	// 		deep: true     // deep意为深度检测
 	// 	}
 	// },
-	created() {
-		this.hasPermission()
+	async created() {
+		await this.hasPermission()
 		this.getList()
 		this.getsupplier()
 	},
 	methods: {
 		// (leo)  判断是否有权限
-		hasPermission() {
+		async hasPermission() {
 			// (leo) : 判断是否是团队成员或是团队管理员
 			const admin_id = String(localStorage.get('admin_info').admin_id)
-			GetTeamUserInfo({ id: 4 })
+			await GetTeamUserInfo({ id: 4 })
 				.then((res) => {
 					// 判断是否是团队成员
 					if (res.data.id_list.includes(admin_id)) {
