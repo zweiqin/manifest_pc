@@ -9,14 +9,13 @@
 						<span>{{ scope.row.manager_info.real_name }}</span>
 					</template>
 				</el-table-column>
-				<!--  TODO: 修改成以表格形式展示      -->
-				<el-table-column :show-overflow-tooltip="true" label="团队成员" min-width="300" prop="admin_list">
-					<template v-slot="scope">
-						<el-tag v-for="item in scope.row.user_list" :key="item.id">
-							{{ item.real_name }}
-						</el-tag>
-					</template>
-				</el-table-column>
+				<!--				<el-table-column :show-overflow-tooltip="true" label="团队成员" min-width="300" prop="admin_list">-->
+				<!--					<template v-slot="scope">-->
+				<!--						<el-tag v-for="item in scope.row.user_list" :key="item.id">-->
+				<!--							{{ item.real_name }}-->
+				<!--						</el-tag>-->
+				<!--					</template>-->
+				<!--				</el-table-column>-->
 				<el-table-column label="创建时间" min-width="180" prop="create_time"></el-table-column>
 				<el-table-column label="操作" min-width="160">
 					<template v-slot="scope">
@@ -66,6 +65,12 @@
 				<el-table-column label="id" min-width="180" prop="admin_id"></el-table-column>
 				<el-table-column label="团队成员" min-width="180" prop="real_name"></el-table-column>
 				<el-table-column label="手机号" min-width="180" prop="phone"></el-table-column>
+				<el-table-column label="企业微信绑定状态" min-width="180">
+					<template v-slot="scope">
+						<el-tag v-if="scope.row.userid !== ''" type="success">已绑定</el-tag>
+						<el-tag v-else type="danger">未绑定</el-tag>
+					</template>
+				</el-table-column>
 			</el-table>
 		</el-dialog>
 		<!--e 查看团队成员   -->

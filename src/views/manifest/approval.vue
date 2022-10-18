@@ -49,31 +49,31 @@
 
 				<el-table-column prop="id" label="ID" min-width="100" />
 				<el-table-column prop="status" label="货单状态" min-width="100">
-					<template slot-scope="scope">
-						<el-tag v-if="scope.row.status==2" type="info">审核不通过</el-tag>
-						<el-tag v-else-if="scope.row.status==7" type="success">提交审核</el-tag>
+					<template v-slot="scope">
+						<el-tag v-if="scope.row.status===2" type="info">审核不通过</el-tag>
+						<el-tag v-else-if="scope.row.status===7" type="success">提交审核</el-tag>
 					</template>
 				</el-table-column>
 				<el-table-column prop="create_time" label="创建时间" min-width="150" />
-				<el-table-column prop="team_examine_id" label="团队审核成员id" min-width="100" />
+				<el-table-column label="团队审核成员" min-width="100" prop="team_admin_info.real_name" />
 				<el-table-column prop="team_examine_status" label="团队审核状态" min-width="100">
-					<template slot-scope="scope">
-						<el-tag v-if="scope.row.team_examine_status==0" type="info">未审核</el-tag>
-						<el-tag v-else-if="scope.row.team_examine_status==1" type="success">通过</el-tag>
+					<template v-slot="scope">
+						<el-tag v-if="scope.row.team_examine_status===0" type="info">未审核</el-tag>
+						<el-tag v-else-if="scope.row.team_examine_status===1" type="success">通过</el-tag>
 						<el-tag v-else type="success">不通过</el-tag>
 					</template>
 				</el-table-column>
 				<el-table-column prop="manager_examine_status" label="管理者审核状态" min-width="100">
-					<template slot-scope="scope">
-						<el-tag v-if="scope.row.manager_examine_status==0" type="info">未审核</el-tag>
-						<el-tag v-else-if="scope.row.team_examine_status==1" type="success">通过</el-tag>
+					<template v-slot="scope">
+						<el-tag v-if="scope.row.manager_examine_status===0" type="info">未审核</el-tag>
+						<el-tag v-else-if="scope.row.team_examine_status===1" type="success">通过</el-tag>
 						<el-tag v-else type="success">不通过</el-tag>
 					</template>
 				</el-table-column>
 				<el-table-column prop="examine_remark" label="审核不通过描述" min-width="100" />
 
 				<el-table-column label="操作" min-width="120" fixed="right" align="center">
-					<template slot-scope="scope">
+					<template v-slot="scope">
 						<el-button type="text" size="small" class="mr10" @click="edit(scope.row)">编辑</el-button>
 					</template>
 				</el-table-column>
@@ -205,7 +205,6 @@ export default {
 		}
 	},
 	async created() {
-		console.log(this.search_form)
 		await this.hasPermission()
 		this.getList(1)
 	},
@@ -219,12 +218,10 @@ export default {
 					// 判断是否是团队成员
 					if (res.data.id_list.includes(admin_id)) {
 						this.is_member = true
-						console.warn('团队成员')
 					}
 					// 判断是否是团队管理员
 					if (res.data.manager_id === admin_id) {
 						this.is_manager = true
-						console.warn('管理员')
 					}
 					if (this.is_member === false && this.is_manager === false) {
 						this.$message.error('您没有权限访问该页面')
@@ -236,7 +233,7 @@ export default {
 				})
 		},
 		changeDate(e) {
-			console.log(e)
+			// console.log(e)
 		},
 		// 重置
 		reset() {
@@ -265,7 +262,6 @@ export default {
 			this.search_form.page = num || this.search_form.page
 			GetManifestList(this.search_form)
 				.then((res) => {
-					console.log(res)
 					this.tableData.data = res.data.items
 					this.tableData.total = res.data.total
 					if (this.search_form.status === '2') {
@@ -291,7 +287,6 @@ export default {
 
 		// 编辑
 		edit(e) {
-			console.log(e)
 			e.ProductList.forEach((item) => {
 				item.total_price = item.purchase_num * item.cost
 			})
@@ -299,8 +294,6 @@ export default {
 			this.edit_visible = true
 			this.team_examine_status = e.team_examine_status
 			this.manager_examine_status = e.manager_examine_status
-			console.log(this.manager_examine_status, this.team_examine_status)
-			console.log(this.is_manager && !this.manager_examine_status && this.team_examine_status === 1)
 		},
 		// 合计采购总价
 		getSummaries(param) {
@@ -334,9 +327,13 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				ChangeManifestStatus({ id: this.manifest_list[0].manifest_id, status: num, admin_id: localStorage.get('admin_info').admin_id, ExamineRemark: this.refuse_form.remark })
-					.then((res) => {
-						console.log(res)
+				ChangeManifestStatus({
+					id: this.manifest_list[0].manifest_id,
+					status: num,
+					admin_id: localStorage.get('admin_info').admin_id,
+					ExamineRemark: this.refuse_form.remark
+				})
+					.then(() => {
 						this.$message({
 							type: 'success',
 							message: '操作成功!'
@@ -347,7 +344,6 @@ export default {
 						this.getList()
 					})
 					.catch((err) => {
-						console.log(err)
 						this.$message.error(err.data.data)
 					})
 			})
@@ -360,7 +356,7 @@ export default {
 		},
 		// s审批不通过的备注
 		// 打开审批不通过的备注框
-		displayRefuse(num) {
+		displayRefuse() {
 			this.refuse_visible = true
 			this.$nextTick(() => {
 				this.$refs.refuse_form.resetFields()
@@ -372,7 +368,6 @@ export default {
 				if (valid) {
 					this.submitManifest(2)
 				} else {
-					console.log('error submit!!')
 					return false
 				}
 			})

@@ -54,6 +54,7 @@
 					</el-table-column>
 					<el-table-column label="序号" min-width="80" prop="id"></el-table-column>
 					<el-table-column label="供应商" min-width="180">{{ item.name }}</el-table-column>
+					<el-table-column label="采购单号" min-width="180" prop="order_sn"></el-table-column>
 					<el-table-column label="货物名称" min-width="180" prop="store_name"></el-table-column>
 					<!--						<el-table-column label="订单数量" min-width="100" prop="cart_num"></el-table-column>-->
 					<!--						<el-table-column label="仓库数量" min-width="120" prop="store_num"></el-table-column>-->
@@ -97,9 +98,7 @@
 </template>
 
 <script>
-import {
-	GetAcceptList, AcceptPurchase, GetSupplierList
-} from '@/api/manifest'
+import { AcceptPurchase, GetAcceptList, GetSupplierList } from '@/api/manifest'
 import localStorage from '@/utils/localStorage'
 import { GetTeamUserInfo } from '@/api/admin'
 
